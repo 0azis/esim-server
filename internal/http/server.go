@@ -1,6 +1,7 @@
 package http
 
 import (
+	"esim/config"
 	"fmt"
 
 	"github.com/labstack/echo/v4"
@@ -19,10 +20,10 @@ type server struct {
 	addr string
 }
 
-func New(addr string) Server {
+func New(cfg config.Config) Server {
 	return &server{
 		e:    echo.New(),
-		addr: addr,
+		addr: cfg.Http.Addr(),
 	}
 }
 

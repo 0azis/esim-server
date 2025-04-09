@@ -11,6 +11,7 @@ import (
 
 type userControllers interface {
 	AuthEmail(c echo.Context) error
+	CheckVerificationCode(c echo.Context) error
 	AuthTelegram(c echo.Context) error
 }
 

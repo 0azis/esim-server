@@ -23,7 +23,7 @@ func NewJwtBuilder(cfg config.Config) Jwt {
 func (j jwtBuilder) SignJwt(userID int) (string, error) {
 	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id": userID,
-	}).SignedString(j.cfg.SecretKey)
+	}).SignedString([]byte(j.cfg.SecretKey))
 
 	return token, err
 }

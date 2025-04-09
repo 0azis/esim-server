@@ -1,10 +1,11 @@
 package mail
 
 import (
+	"esim/config"
 	"net/smtp"
 )
 
-const smtpHost = "smtp.google.com"
+const smtpHost = "smtp.gmail.com"
 const smtpPort = "587"
 
 type Mailer interface {
@@ -27,4 +28,11 @@ func (m mailer) SendVerificationCode(toEmail string, code int) error {
 	}
 
 	return nil
+}
+
+func New(cfg config.Config) Mailer {
+	return mailer{
+		cfg.Mail.Address(),
+		cfg.Mail.Password(),
+	}
 }

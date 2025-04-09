@@ -1,0 +1,46 @@
+services:
+  db:
+    container_name: mysql
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${DATABASE_USER}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - "./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql"
+      - "mysql-data:/var/lib/mysql"
+    ports:
+      - ${DATABASE_PORT}:3306
+  redis:
+    container_name: redis
+    image: redis:latest
+    command: redis-server --requirepass "$REDIS_PASSWORD"
+    ports:
+      - ${REDIS_PORT}:6379
+    volumes:
+      - "redis-data:/data"
+  http:
+    container_name: http
+    build:
+      dockerfile: Dockerfile
+      context: .
+      args:
+        GO_VERSION: ${GO_VERSION}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - ${HTTP_PORT}:${HTTP_PORT}
+    environment:
+      - GO_VERSION=${GO_VERSION}
+
+volumes:
+  mysql-data:
+  redis-data:

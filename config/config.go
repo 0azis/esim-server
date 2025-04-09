@@ -10,7 +10,7 @@ type Config struct {
 	Database database
 	Redis    redis
 	Http     http
-	Email    email
+	Mail     mail
 
 	SecretKey     string
 	TelegramToken string
@@ -21,6 +21,7 @@ func New() Config {
 		Database: newDatabase(),
 		Redis:    newRedis(),
 		Http:     newHTTP(),
+		Mail:     newMail(),
 
 		SecretKey:     getEnv("JWT_SECRET_KEY"),
 		TelegramToken: getEnv("TELEGRAM_TOKEN"),
@@ -86,16 +87,24 @@ func (h http) Addr() string {
 	return fmt.Sprintf(":%s", h.port)
 }
 
-type email struct {
+type mail struct {
 	address  string
 	password string
 }
 
-func newEmail() email {
-	return email{
+func newMail() mail {
+	return mail{
 		address:  getEnv("MAIL_ADDRESS"),
 		password: getEnv("MAIL_PASSWORD"),
 	}
+}
+
+func (m mail) Address() string {
+	return m.address
+}
+
+func (m mail) Password() string {
+	return m.password
 }
 
 func getEnv(key string) string {

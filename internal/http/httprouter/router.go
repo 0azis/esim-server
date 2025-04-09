@@ -25,5 +25,6 @@ func (r Router) userRoutes() {
 	controller := NewUserControllers(r.app)
 
 	user.POST("/auth/email", controller.AuthEmail)
+	user.POST("/auth/email/check", controller.CheckVerificationCode)
 	user.POST("/auth/telegram", controller.AuthTelegram)
 }

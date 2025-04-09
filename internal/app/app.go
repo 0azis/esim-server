@@ -33,7 +33,8 @@ func New(cfg config.Config) (App, error) {
 	}
 
 	redis := redis.New(cfg)
-	http := http.New(cfg.Http.Addr())
+	http := http.New(cfg)
+	mailer := mail.New(cfg)
 	bot, err := telegram.NewBot(cfg, store)
 	if err != nil {
 		return app, err
@@ -44,6 +45,7 @@ func New(cfg config.Config) (App, error) {
 	app.Store = store
 	app.Redis = redis
 	app.Server = http
+	app.Mailer = mailer
 	app.Bot = bot
 
 	app.Jwt = jwtBuilder
